@@ -56,22 +56,29 @@ public class VerticalOverScrollBounceEffectDecorator extends OverScrollBounceEff
      *
      * @param viewAdapter The view's encapsulation.
      */
+
     public VerticalOverScrollBounceEffectDecorator(IOverScrollDecoratorAdapter viewAdapter) {
-        this(viewAdapter, DEFAULT_TOUCH_DRAG_MOVE_RATIO_FWD, DEFAULT_TOUCH_DRAG_MOVE_RATIO_BCK, DEFAULT_DECELERATE_FACTOR);
+        this(viewAdapter, DEFAULT_TOUCH_DRAG_MOVE_RATIO_FWD, DEFAULT_TOUCH_DRAG_MOVE_RATIO_BCK, DEFAULT_DECELERATE_FACTOR, true);
+    }
+
+    public VerticalOverScrollBounceEffectDecorator(IOverScrollDecoratorAdapter viewAdapter, boolean showBounceEffect) {
+        this(viewAdapter, DEFAULT_TOUCH_DRAG_MOVE_RATIO_FWD, DEFAULT_TOUCH_DRAG_MOVE_RATIO_BCK, DEFAULT_DECELERATE_FACTOR, showBounceEffect);
     }
 
     /**
      * C'tor, creating the effect with explicit arguments.
-     * @param viewAdapter The view's encapsulation.
+     *
+     * @param viewAdapter       The view's encapsulation.
      * @param touchDragRatioFwd Ratio of touch distance to actual drag distance when in 'forward' direction.
      * @param touchDragRatioBck Ratio of touch distance to actual drag distance when in 'backward'
      *                          direction (opposite to initial one).
-     * @param decelerateFactor Deceleration factor used when decelerating the motion to create the
-     *                         bounce-back effect.
+     * @param decelerateFactor  Deceleration factor used when decelerating the motion to create the
+     *                          bounce-back effect.
      */
     public VerticalOverScrollBounceEffectDecorator(IOverScrollDecoratorAdapter viewAdapter,
-                                                   float touchDragRatioFwd, float touchDragRatioBck, float decelerateFactor) {
-        super(viewAdapter, decelerateFactor, touchDragRatioFwd, touchDragRatioBck);
+                                                   float touchDragRatioFwd, float touchDragRatioBck, float decelerateFactor,
+                                                   boolean showBounceEffect) {
+        super(viewAdapter, decelerateFactor, touchDragRatioFwd, touchDragRatioBck, showBounceEffect);
     }
 
     @Override
@@ -86,12 +93,14 @@ public class VerticalOverScrollBounceEffectDecorator extends OverScrollBounceEff
 
     @Override
     protected void translateView(View view, float offset) {
-        view.setTranslationY(offset);
+        if (showBounceEffect)
+            view.setTranslationY(offset);
     }
 
     @Override
     protected void translateViewAndEvent(View view, float offset, MotionEvent event) {
-        view.setTranslationY(offset);
+        if (showBounceEffect)
+            view.setTranslationY(offset);
         event.offsetLocation(offset - event.getY(0), 0f);
     }
 }
